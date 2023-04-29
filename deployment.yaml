@@ -1,0 +1,230 @@
+##################################################################################################
+
+# Hello message services being called by main service visits-service
+
+##################################################################################################
+
+apiVersion: v1
+
+kind: Service 
+
+metadata:
+  name: visits-service
+  labels:
+    app: visits-service-svc-label
+
+spec:
+  ports:
+  - port: 9999
+    name: http
+
+  selector:
+    app: visits-service-v1
+
+  type: NodePort
+
+---
+
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+  name: visits-service-deployment-v1
+  labels:
+    app: visits-service-dep-label
+
+spec:
+  replicas: 2
+  selector: 
+    matchLabels: 
+      app: visits-service-v1
+
+  template: # template for the pods
+    metadata:
+      labels:
+        app: visits-service-v1
+
+    spec:
+      containers:
+      - name: visits-service-ver1
+        image: saurabh2204/online-appointment-visits-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9898
+
+---
+
+
+##################################################################################################
+
+# Hello message services being called by main service customers-service
+
+##################################################################################################
+
+apiVersion: v1
+
+kind: Service 
+
+metadata:
+  name: patient-service
+ # namespace: patient-service
+  labels:
+    app: patient-service-svc-label
+
+spec:
+  ports:
+  - port: 8080
+    name: http
+
+  selector:
+    app: patient-service-v1-v3
+
+  type: NodePort
+
+---
+
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+  name: patient-service-deployment-v1
+ # namespace: patient-service
+  labels:
+    app: patient-service-dep-label
+
+spec:
+  replicas: 1
+  selector: 
+    matchLabels: 
+      app: patient-service-v1-v3
+
+  template: # template for the pods
+    metadata:
+      labels:
+        app: patient-service-v1-v3
+        version: v1
+        #application: petclinic
+
+    spec:
+      containers:
+      - name: customers-service-ver1
+        image: saurabh2204/online-appointment-patient-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9899
+
+---
+
+
+##################################################################################################
+
+# Hello message services being called by main service vets-service
+
+##################################################################################################
+
+apiVersion: v1
+
+kind: Service #UI calls - http://vets-service:8888
+
+metadata:
+  name: doctor-service
+  labels:
+    app: doctor-service-svc-label
+
+spec:
+  ports:
+  - port: 8888
+    name: http
+
+  selector:
+    app: doctor-service-v1-v2
+
+  type: NodePort
+
+---
+
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+  name: doctor-service-deployment-v1
+  labels:
+    app: doctor-service-dep-label
+
+spec:
+  replicas: 1
+  selector: 
+    matchLabels: 
+      app: doctor-service-v1-v2
+
+  template: # template for the pods
+    metadata:
+      labels:
+        app: doctor-service-v1-v2
+        version: v1
+
+    spec:
+      containers:
+      - name: vets-service-ver1
+        image: saurabh2204/online-appointment-doctor-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8899
+
+---
+
+##################################################################################################
+
+# Hello message services being called by main service api-service
+
+##################################################################################################
+
+apiVersion: v1
+
+kind: Service
+
+metadata:
+
+  name: api-service
+  labels:
+    app: api-service
+
+spec:
+  ports:
+  - port: 8081
+    name: http
+
+  selector:
+    app: api-service
+  type: NodePort
+
+---
+
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+  name: api-service-deployment-v1
+
+spec:
+  replicas: 1
+  selector: 
+    matchLabels: 
+      app: api-service
+
+  template: # template for the pods
+    metadata:
+      labels:
+        app: api-service
+
+    spec:
+      containers:
+      - name: api-service
+        image: saurabh2204/online-appointment-api-gateway:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8087
