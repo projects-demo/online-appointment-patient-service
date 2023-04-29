@@ -4,16 +4,16 @@ steps:
     entrypoint: 'mvn'
     args: ['clean', 'install', '-DskipTests']
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'saurabh2204/online-appointment-patient-service:latest', '.']
+    args: ['build', '-t', 'gcr.io/app-mod-gebu-trainees/online-appointment-patient-service:latest', '.']
   # push container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'saurabh2204/online-appointment-patient-service:latest']
+    args: ['push', 'gcr.io/app-mod-gebu-trainees/online-appointment-patient-service:latest']
   # Deploy on GKE
   - name: "gcr.io/cloud-builders/gke-deploy"
     args:
     - run
     - --filename=deployment.yaml
-    - --image=saurabh2204/online-appointment-patient-service:latest
+    - --image=gcr.io/app-mod-gebu-trainees/online-appointment-patient-service:latest
     - --location=us-central1-c
     - --cluster=cluster-1
 options:
